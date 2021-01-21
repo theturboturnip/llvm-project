@@ -11,7 +11,7 @@ from pathlib import Path
 LLVM_SRC_PATH = Path(__file__).parent.parent.parent.parent
 
 CHERI_GENERIC_UTC_KEY = 'CHERI-GENERIC-UTC:'
-CHERI_GENERIC_UTC_CMD = re.compile((r'.*' + CHERI_GENERIC_UTC_KEY + '\s*(?P<cmd>.*)\s*$').encode("utf-8"))
+CHERI_GENERIC_UTC_CMD = re.compile((r'.*' + CHERI_GENERIC_UTC_KEY + r'\s*(?P<cmd>.*)\s*$').encode("utf-8"))
 
 
 class ArchSpecificValues(object):
@@ -66,6 +66,15 @@ ALL_ARCHITECTURE_IFNOT_STRS = set([b"@IFNOT-" + arch_def.name.encode() + b"@" fo
                                b"@IFNOT-" + arch_def.base_name.encode() + b"@" for arch_def in ALL_ARCHITECTURES])
 
 
+class UtcCommand:
+    def __init__(self, base_command: "list[str]", extra_args: "list[str]"):
+        self.base_command = base_command
+        self.extra_args = extra_args
+
+    def command(self):
+        return self.base_command + self.extra_args
+
+
 class CmdArgs(object):
     def __init__(self):
         parser = argparse.ArgumentParser()
@@ -108,13 +117,13 @@ def update_one_test(test_name: str, input_file: typing.BinaryIO,
                       "--llc-binary", str(args.llc_cmd),
                       str(output_path)]
     opt_checks_cmd = [sys.executable, str(update_scripts_dir / "update_test_checks.py"),
-                      "--function-signature", "--scrub-attributes", "--force-update",
+                      "--force-update",
                       "--opt-binary", str(args.opt_cmd),
                       str(output_path)]
     utc_cmds = {
-        b'llc': llc_checks_cmd,
-        b'mir': mir_checks_cmd,
-        b'opt': opt_checks_cmd,
+        b'llc': UtcCommand(llc_checks_cmd, []),
+        b'mir': UtcCommand(mir_checks_cmd, []),
+        b'opt': UtcCommand(opt_checks_cmd, ["--function-signature", "--scrub-attributes"]),
     }
 
     with output_path.open("wb") as output_file:
@@ -137,7 +146,7 @@ def update_one_test(test_name: str, input_file: typing.BinaryIO,
                     continue
                 else:
                     sys.exit("Invalid @IF- directive: " + line.decode("utf-8"))
-            if line.startswith(b"@IFNOT-"):
+            elif line.startswith(b"@IFNOT-"):
                 if line.startswith(current_arch_ifnot):
                     print("Skipping", current_arch_ifnot, "line: ", line)
                     continue
@@ -153,6 +162,16 @@ def update_one_test(test_name: str, input_file: typing.BinaryIO,
                         break
                 if not valid_directive:
                     sys.exit("Invalid @IF- directive: " + line.decode("utf-8"))
+            else:
+                for tool in utc_cmds.keys():
+                    directive = b"; UPDATE_" + tool.upper() + b"_ARGS:"
+                    if line.startswith(directive):
+                        argstr = line[len(directive):].decode("utf-8")
+                        new_args = [x.strip() for x in argstr.split()]
+                        print("Changing", tool, "extra args from",
+                              utc_cmds[tool].extra_args, "to", new_args)
+                        utc_cmds[tool].extra_args = new_args
+                        break
 
             m = CHERI_GENERIC_UTC_CMD.match(line)
             if m:
@@ -208,11 +227,8 @@ def update_one_test(test_name: str, input_file: typing.BinaryIO,
     # Generate the check lines using update_*_test_checks.py
     for update_cmd in [utc_cmds[k] for k in cheri_generic_utcs]:
         # if args.verbose:
-        print("Running", " ".join(update_cmd))
-        subprocess.check_call(update_cmd)
-    #/Users/alex/cheri/llvm-project/llvm/utils/update_llc_test_checks.py --verbose --llc-binary /Users/alex/cheri/llvm-project/cmake-build-debug/bin/llc /Users/alex/cheri/llvm-project/llvm/test/CodeGen/CHERI-Generic/MIPS/cheri-csub.ll
-
-    # TODO: run update_test_checks.py
+        print("Running", " ".join(update_cmd.base_command + update_cmd.extra_args))
+        subprocess.check_call(update_cmd.base_command + update_cmd.extra_args)
 
 
 def main():
