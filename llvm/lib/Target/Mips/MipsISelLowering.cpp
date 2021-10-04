@@ -5845,12 +5845,11 @@ void MipsTargetLowering::passByValArg(
   unsigned MemCpySize = ByValSizeInBytes - OffsetInBytes;
   SDValue Src = DAG.getPointerAdd(DL, Arg, OffsetInBytes);
   SDValue Dst = DAG.getPointerAdd(DL, StackPtr, VA.getLocMemOffset());
-  Chain = DAG.getMemcpy(Chain, DL, Dst, Src,
-                        DAG.getIntPtrConstant(MemCpySize, DL), Alignment,
-                        /*isVolatile=*/false, /*AlwaysInline=*/false,
-                        /*isTailCall=*/false,
-                        /*MustPreserveCheriCapabilities=*/false,
-                        MachinePointerInfo(), MachinePointerInfo());
+  Chain = DAG.getMemcpy(
+      Chain, DL, Dst, Src, DAG.getIntPtrConstant(MemCpySize, DL), Alignment,
+      /*isVolatile=*/false, /*AlwaysInline=*/false,
+      /*isTailCall=*/false, llvm::PreserveCheriTags::Unnecessary,
+      MachinePointerInfo(), MachinePointerInfo());
   MemOpChains.push_back(Chain);
 }
 
