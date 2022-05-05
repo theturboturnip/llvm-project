@@ -3334,6 +3334,8 @@ def PseudoVSETIVLI : Pseudo<(outs GPR:$rd), (ins uimm5:$rs1, VTypeIOp:$vtypei), 
 // 7. Vector Loads and Stores
 //===----------------------------------------------------------------------===//
 
+// TODO - Create these pseudos for Capability as well as Integer
+
 //===----------------------------------------------------------------------===//
 // 7.4 Vector Unit-Stride Instructions
 //===----------------------------------------------------------------------===//
