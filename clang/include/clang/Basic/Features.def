@@ -235,6 +235,7 @@ FEATURE(capabilities, PP.getTargetInfo().SupportsCapabilities())
 FEATURE(pointer_interpretation, PP.getTargetInfo().SupportsCapabilities())
 FEATURE(__cheri_cast, PP.getTargetInfo().SupportsCapabilities())
 FEATURE(cheri_casts, PP.getTargetInfo().SupportsCapabilities())
+FEATURE(pure_capabilities, PP.getTargetInfo().areAllPointersCapabilities())
 
 // C11 features supported by other languages as extensions.
 EXTENSION(c_alignas, true)
