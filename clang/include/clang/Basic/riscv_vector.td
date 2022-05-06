@@ -559,13 +559,13 @@ class IsFloat<string type> {
 let HasNoMaskedOverloaded = false,
     ManualCodegen = [{
       IntrinsicTypes = {ResultType, Ops[1]->getType()};
-      Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+      Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
     }],
     ManualCodegenMask= [{
       // Move mask to right before vl.
       std::rotate(Ops.begin(), Ops.begin() + 1, Ops.end() - 1);
       IntrinsicTypes = {ResultType, Ops[3]->getType()};
-      Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo());
+      Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo(200));
     }] in {
   class RVVVLEMaskBuiltin : RVVBuiltin<"m", "mPCUe", "c"> {
     let Name = "vle1_v";
@@ -594,7 +594,7 @@ multiclass RVVVLEFFBuiltin<list<string> types> {
       ManualCodegen = [{
       {
         IntrinsicTypes = {ResultType, Ops[2]->getType()};
-        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
         Value *NewVL = Ops[1];
         Ops.erase(Ops.begin() + 1);
         llvm::Function *F = CGM.getIntrinsic(ID, IntrinsicTypes);
@@ -613,7 +613,7 @@ multiclass RVVVLEFFBuiltin<list<string> types> {
         // Move mask to right before vl.
         std::rotate(Ops.begin(), Ops.begin() + 1, Ops.end() - 1);
         IntrinsicTypes = {ResultType, Ops[4]->getType()};
-        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo(200));
         Value *NewVL = Ops[2];
         Ops.erase(Ops.begin() + 2);
         llvm::Function *F = CGM.getIntrinsic(ID, IntrinsicTypes);
@@ -644,13 +644,13 @@ multiclass RVVVLSEBuiltin<list<string> types> {
       HasNoMaskedOverloaded = false,
       ManualCodegen = [{
         IntrinsicTypes = {ResultType, Ops[2]->getType()};
-        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
       }],
       ManualCodegenMask= [{
         // Move mask to right before vl.
         std::rotate(Ops.begin(), Ops.begin() + 1, Ops.end() - 1);
         IntrinsicTypes = {ResultType, Ops[4]->getType()};
-        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo(200));
       }] in {
     foreach type = types in {
       def : RVVBuiltin<"v", "vPCet", type>;
@@ -664,13 +664,13 @@ multiclass RVVVLSEBuiltin<list<string> types> {
 multiclass RVVIndexedLoad<string op> {
   let ManualCodegen = [{
         IntrinsicTypes = {ResultType, Ops[1]->getType(), Ops[2]->getType()};
-        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+        Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
       }],
       ManualCodegenMask = [{
         // Move mask to right before vl.
         std::rotate(Ops.begin(), Ops.begin() + 1, Ops.end() - 1);
         IntrinsicTypes = {ResultType, Ops[2]->getType(), Ops[4]->getType()};
-        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], ResultType->getPointerTo(200));
       }] in {
       foreach type = TypeList in {
         foreach eew_list = EEWList in {
@@ -691,13 +691,13 @@ let HasMaskedOffOperand = false,
     ManualCodegen = [{
       // Builtin: (ptr, value, vl). Intrinsic: (value, ptr, vl)
       std::swap(Ops[0], Ops[1]);
-      Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo());
+      Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo(200));
       IntrinsicTypes = {Ops[0]->getType(), Ops[2]->getType()};
     }],
     ManualCodegenMask= [{
       // Builtin: (mask, ptr, value, vl). Intrinsic: (value, ptr, mask, vl)
       std::swap(Ops[0], Ops[2]);
-      Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo());
+      Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo(200));
       IntrinsicTypes = {Ops[0]->getType(), Ops[3]->getType()};
     }] in {
   class RVVVSEMaskBuiltin : RVVBuiltin<"m", "0PUem", "c"> {
@@ -727,13 +727,13 @@ multiclass RVVVSSEBuiltin<list<string> types> {
       ManualCodegen = [{
         // Builtin: (ptr, stride, value, vl). Intrinsic: (value, ptr, stride, vl)
         std::rotate(Ops.begin(), Ops.begin() + 2, Ops.begin() + 3);
-        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo(200));
         IntrinsicTypes = {Ops[0]->getType(), Ops[3]->getType()};
       }],
       ManualCodegenMask= [{
         // Builtin: (mask, ptr, stride, value, vl). Intrinsic: (value, ptr, stride, mask, vl)
         std::swap(Ops[0], Ops[3]);
-        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo(200));
         IntrinsicTypes = {Ops[0]->getType(), Ops[4]->getType()};
       }] in {
     foreach type = types in {
@@ -750,13 +750,13 @@ multiclass RVVIndexedStore<string op> {
       ManualCodegen = [{
         // Builtin: (ptr, index, value, vl). Intrinsic: (value, ptr, index, vl)
         std::rotate(Ops.begin(), Ops.begin() + 2, Ops.begin() + 3);
-        Ops[1] = Builder.CreateBitCast(Ops[1],Ops[0]->getType()->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1],Ops[0]->getType()->getPointerTo(200));
         IntrinsicTypes = {Ops[0]->getType(), Ops[2]->getType(), Ops[3]->getType()};
       }],
       ManualCodegenMask= [{
         // Builtin: (mask, ptr, index, value, vl). Intrinsic: (value, ptr, index, mask, vl)
         std::swap(Ops[0], Ops[3]);
-        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo());
+        Ops[1] = Builder.CreateBitCast(Ops[1], Ops[0]->getType()->getPointerTo(200));
         IntrinsicTypes = {Ops[0]->getType(), Ops[2]->getType(), Ops[4]->getType()};
       }] in {
       foreach type = TypeList in {
@@ -1227,12 +1227,12 @@ multiclass RVVAMOBuiltinSet<bit has_signed = false, bit has_unsigned = false,
           ManualCodegen = [{
             // base, bindex, value, vl
             IntrinsicTypes = {ResultType, Ops[1]->getType(), Ops[3]->getType()};
-            Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+            Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
           }],
           ManualCodegenMask = [{
             std::rotate(Ops.begin(), Ops.begin() + 1, Ops.end() - 1);
             IntrinsicTypes = {ResultType, Ops[1]->getType(), Ops[4]->getType()};
-            Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo());
+            Ops[0] = Builder.CreateBitCast(Ops[0], ResultType->getPointerTo(200));
           }] in {
         if has_signed then
           def : RVVBuiltin<"v", "vPe" # eew_index # "Uvv", type>;

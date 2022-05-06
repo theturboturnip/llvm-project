@@ -145,7 +145,7 @@ let TargetPrefix = "riscv" in {
   // Input: (pointer, vl)
   class RISCVUSLoad
         : Intrinsic<[llvm_anyvector_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>,
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyint_ty],
                     [NoCapture<ArgIndex<0>>, IntrReadMem]>, RISCVVIntrinsic;
   // For unit stride fault-only-first load
@@ -155,7 +155,7 @@ let TargetPrefix = "riscv" in {
   // VL as a side effect. IntrReadMem, IntrHasSideEffects does not work.
   class RISCVUSLoadFF
         : Intrinsic<[llvm_anyvector_ty, llvm_anyint_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>, LLVMMatchType<1>],
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>, LLVMMatchType<1>],
                     [NoCapture<ArgIndex<0>>]>,
                     RISCVVIntrinsic;
   // For unit stride load with mask
@@ -163,7 +163,7 @@ let TargetPrefix = "riscv" in {
   class RISCVUSLoadMask
         : Intrinsic<[llvm_anyvector_ty ],
                     [LLVMMatchType<0>,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                      llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrReadMem]>, RISCVVIntrinsic;
@@ -175,7 +175,7 @@ let TargetPrefix = "riscv" in {
   class RISCVUSLoadFFMask
         : Intrinsic<[llvm_anyvector_ty, llvm_anyint_ty],
                     [LLVMMatchType<0>,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                      LLVMMatchType<1>],
                     [NoCapture<ArgIndex<1>>]>, RISCVVIntrinsic;
@@ -183,7 +183,7 @@ let TargetPrefix = "riscv" in {
   // Input: (pointer, stride, vl)
   class RISCVSLoad
         : Intrinsic<[llvm_anyvector_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>,
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyint_ty, LLVMMatchType<1>],
                     [NoCapture<ArgIndex<0>>, IntrReadMem]>, RISCVVIntrinsic;
   // For strided load with mask
@@ -191,14 +191,14 @@ let TargetPrefix = "riscv" in {
   class RISCVSLoadMask
         : Intrinsic<[llvm_anyvector_ty ],
                     [LLVMMatchType<0>,
-                     LLVMPointerType<LLVMMatchType<0>>, llvm_anyint_ty,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyint_ty,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>, LLVMMatchType<1>],
                     [NoCapture<ArgIndex<1>>, IntrReadMem]>, RISCVVIntrinsic;
   // For indexed load
   // Input: (pointer, index, vl)
   class RISCVILoad
         : Intrinsic<[llvm_anyvector_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>,
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyvector_ty, llvm_anyint_ty],
                     [NoCapture<ArgIndex<0>>, IntrReadMem]>, RISCVVIntrinsic;
   // For indexed load with mask
@@ -206,7 +206,7 @@ let TargetPrefix = "riscv" in {
   class RISCVILoadMask
         : Intrinsic<[llvm_anyvector_ty ],
                     [LLVMMatchType<0>,
-                     LLVMPointerType<LLVMMatchType<0>>, llvm_anyvector_ty,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyvector_ty,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>, llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrReadMem]>, RISCVVIntrinsic;
   // For unit stride store
@@ -214,7 +214,7 @@ let TargetPrefix = "riscv" in {
   class RISCVUSStore
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
   // For unit stride store with mask
@@ -222,7 +222,7 @@ let TargetPrefix = "riscv" in {
   class RISCVUSStoreMask
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                      llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
@@ -231,7 +231,7 @@ let TargetPrefix = "riscv" in {
   class RISCVSStore
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyint_ty, LLVMMatchType<1>],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
   // For stride store with mask
@@ -239,7 +239,7 @@ let TargetPrefix = "riscv" in {
   class RISCVSStoreMask
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>, llvm_anyint_ty,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyint_ty,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>, LLVMMatchType<1>],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
   // For indexed store
@@ -247,7 +247,7 @@ let TargetPrefix = "riscv" in {
   class RISCVIStore
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>,
                      llvm_anyint_ty, llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
   // For indexed store with mask
@@ -255,7 +255,7 @@ let TargetPrefix = "riscv" in {
   class RISCVIStoreMask
         : Intrinsic<[],
                     [llvm_anyvector_ty,
-                     LLVMPointerType<LLVMMatchType<0>>, llvm_anyvector_ty,
+                     LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyvector_ty,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>, llvm_anyint_ty],
                     [NoCapture<ArgIndex<1>>, IntrWriteMem]>, RISCVVIntrinsic;
   // For destination vector type is the same as source vector.
@@ -624,14 +624,14 @@ let TargetPrefix = "riscv" in {
   // Input: (base, index, value, vl)
   class RISCVAMONoMask
         : Intrinsic<[llvm_anyvector_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>, llvm_anyvector_ty, LLVMMatchType<0>,
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyvector_ty, LLVMMatchType<0>,
                      llvm_anyint_ty],
                     [NoCapture<ArgIndex<0>>]>, RISCVVIntrinsic;
   // For atomic operations with mask
   // Input: (base, index, value, mask, vl)
   class RISCVAMOMask
         : Intrinsic<[llvm_anyvector_ty],
-                    [LLVMPointerType<LLVMMatchType<0>>, llvm_anyvector_ty, LLVMMatchType<0>,
+                    [LLVMQualPointerType<LLVMMatchType<0>, 200>, llvm_anyvector_ty, LLVMMatchType<0>,
                      LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>, llvm_anyint_ty],
                     [NoCapture<ArgIndex<0>>]>, RISCVVIntrinsic;
 

@@ -1299,7 +1299,7 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
     if (!VTy)
       llvm_unreachable("Expected an argument of Vector Type");
     Type *EltTy = VTy->getElementType();
-    return PointerType::getUnqual(EltTy);
+    return PointerType::get(EltTy, 200);
   }
   case IITDescriptor::VecElementArgument: {
     Type *Ty = Tys[D.getArgumentNumber()];

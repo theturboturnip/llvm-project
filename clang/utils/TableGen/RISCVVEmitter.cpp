@@ -533,7 +533,7 @@ void RVVType::initTypeStr() {
     llvm_unreachable("ScalarType is invalid!");
   }
   if (IsPointer)
-    Str += " *";
+    Str += " * __capability";
 }
 
 void RVVType::initShortStr() {
