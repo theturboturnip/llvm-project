@@ -248,6 +248,9 @@ public:
       NumUsesWithBounds += UsesThatNeedBounds.size();
       NumUsesWithoutBounds += TotalUses - UsesThatNeedBounds.size();
       // Get the size of the alloca
+      // TODO - DL.getTypeAllocSize returns a llvm::TypeSize, which is more than just an unsigned int.
+      // Trying to implicitly convert it to an unsigned int works for everything except scalable vectors.
+      // This conversion causes a crash when scalable vectors are allocated on the stack.
       unsigned ElementSize = DL.getTypeAllocSize(AllocationTy);
       Value *Size = ConstantInt::get(SizeTy, ElementSize);
       if (AI->isArrayAllocation())
