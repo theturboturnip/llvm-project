@@ -65,6 +65,7 @@ def LSWidth8     : RISCVWidth<0b0000>;
 def LSWidth16    : RISCVWidth<0b0101>;
 def LSWidth32    : RISCVWidth<0b0110>;
 def LSWidth64    : RISCVWidth<0b0111>;
+def LSWidth128    : RISCVWidth<0b1000>;
 
 class RVInstSetiVLi<dag outs, dag ins, string opcodestr, string argstr>
     : RVInst<outs, ins, opcodestr, argstr, [], InstFormatI> {

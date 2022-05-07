@@ -468,6 +468,7 @@ def VLE8_V : VUnitStrideLoad<LUMOPUnitStride, LSWidth8, "vle8.v", VPTR>;
 def VLE16_V : VUnitStrideLoad<LUMOPUnitStride, LSWidth16, "vle16.v", VPTR>;
 def VLE32_V : VUnitStrideLoad<LUMOPUnitStride, LSWidth32, "vle32.v", VPTR>;
 def VLE64_V : VUnitStrideLoad<LUMOPUnitStride, LSWidth64, "vle64.v", VPTR>;
+def VLE128_V : VUnitStrideLoad<LUMOPUnitStride, LSWidth128, "vle128.v", VPTR>;
 
 def VLE8FF_V : VUnitStrideLoad<LUMOPUnitStrideFF, LSWidth8, "vle8ff.v", VPTR>;
 def VLE16FF_V : VUnitStrideLoad<LUMOPUnitStrideFF, LSWidth16, "vle16ff.v", VPTR>;
@@ -481,6 +482,7 @@ def VSE8_V : VUnitStrideStore<SUMOPUnitStride, LSWidth8, "vse8.v", VPTR>;
 def VSE16_V : VUnitStrideStore<SUMOPUnitStride, LSWidth16, "vse16.v", VPTR>;
 def VSE32_V : VUnitStrideStore<SUMOPUnitStride, LSWidth32, "vse32.v", VPTR>;
 def VSE64_V : VUnitStrideStore<SUMOPUnitStride, LSWidth64, "vse64.v", VPTR>;
+def VSE128_V : VUnitStrideStore<SUMOPUnitStride, LSWidth128, "vse128.v", VPTR>;
 
 // Vector Strided Instructions
 def VLSE8_V : VStridedLoad<LSWidth8, "vlse8.v", VPTR>;
